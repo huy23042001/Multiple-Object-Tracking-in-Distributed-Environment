@@ -9,9 +9,9 @@ from sqlquery import MySQLBuilder
 from multiprocessing import Process
 import threading
 producer = KafkaProducer(bootstrap_servers=['192.168.100.124:9092','192.168.100.125:9093'])
-mydb = MySQLBuilder()
-cameras = mydb.execute("select * from cameras")
-
+# mydb = MySQLBuilder()
+# cameras = mydb.execute("select * from cameras")
+cameras = [(1,'1.mp4'),(2,'2.mp4'),(3,'3.mp4'),(4,'4.mp4'),(5,'5.mp4'),(6,'1.mp4'),(7,'2.mp4'),(8,'3.mp4'),(9,'4.mp4'),(10,'5.mp4')]
 def encode(cam_id, frame):
     _, buff = cv2.imencode('.jpg', frame)
     b64 = base64.b64encode(buff).decode()

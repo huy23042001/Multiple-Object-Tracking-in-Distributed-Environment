@@ -12,7 +12,7 @@ import multiprocessing.dummy as mp
 from datetime import datetime
 from sqlquery import MySQLBuilder
 
-bootstrap_servers=['192.168.56.102:9092', '192.168.56.103:9093']
+bootstrap_servers=['192.168.100.124:9092', '192.168.100.125:9093']
 topics = ["stream_0", "stream_1"]
 email = SendMail()
 mydb = MySQLBuilder()
