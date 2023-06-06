@@ -133,9 +133,6 @@ def run(id):
     thread.start()
     thread1.start()
     thread2.start()
-    thread.join()
-    thread1.join()
-    thread2.join()
 if __name__ == '__main__':
     procs = []
     for i in range(1,13,3):
