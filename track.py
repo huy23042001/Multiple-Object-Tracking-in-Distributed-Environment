@@ -94,7 +94,6 @@ class VideoTracker(object):
 
         # get all obj ************************************************************
         det = pred[0]  # for video, bz is 1
-        amount = 0
         if det is not None and len(det):  # det: (#obj, 6)  x1 y1 x2 y2 conf cls
             # Rescale boxes from img_size to original im0 size
             det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
