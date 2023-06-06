@@ -27,7 +27,7 @@ samples= ''
 global topics
 topics = ["camera_0", "camera_1"]
 
-hosts = "192.168.56.102:9092,192.168.56.103:9093"
+hosts = "192.168.100.124:9092,192.168.100.125:9093"
 schema = StructType([
         StructField("camera_id", IntegerType(),True),
         StructField("send_time", FloatType(),True),
@@ -57,9 +57,9 @@ def tracking(data):
         img = b64encode(buff).decode()
         obj = track.create_record(cam_id, send_time, amount, s, img, tracks, samples)
         mydb = connect(
-            host="192.168.56.104",
-            user="admin",
-            password="password",
+            host="localhost",
+            user="root",
+            password="hduser@123",
             database="object_tracking") 
         cursor = mydb.cursor()
         sql = "INSERT INTO frame (camera_id, send_time, data) VALUES (%s, %s, %s)"
