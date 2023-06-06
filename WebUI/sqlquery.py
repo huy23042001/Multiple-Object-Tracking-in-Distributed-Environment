@@ -8,7 +8,7 @@ class MySQLBuilder:
         #     password="password",
         #     database="test") 
         self.mydb = connect(
-            host="192.168.100.126",
+            host="localhost",
             user="hduser",
             password="hduser@123",
             database="object_tracking") 
