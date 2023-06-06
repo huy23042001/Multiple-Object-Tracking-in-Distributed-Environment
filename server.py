@@ -14,6 +14,7 @@ from pyspark.sql.types import *
 from pyspark.sql.types import StructField, StructType, StringType
 from mysql.connector import connect
 import threading
+from multiprocessing import Process
 spark  =  SparkSession.builder.appName('video_tracking.com').getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 spark.sparkContext.addPyFile("DS.zip")
@@ -25,8 +26,6 @@ global tracks
 tracks= ''
 global samples
 samples= ''
-global topics
-topics = ["camera_0", "camera_1"]
 
 hosts = "192.168.100.124:9092,192.168.100.125:9093"
 schema = StructType([
@@ -102,9 +101,9 @@ def process(row):
     cursor.close()   
 
 
-def consum(topic):
-    print(topic)
-    consumer = KafkaConsumer(topic, bootstrap_servers = hosts.split(","), auto_offset_reset="latest", enable_auto_commit = True)
+def consum(id):
+    print("start with camera " + id)
+    consumer = KafkaConsumer("camera_" + id, bootstrap_servers = hosts.split(","), auto_offset_reset="latest", enable_auto_commit = True)
     global tracks
     global samples
     for msg in consumer:  
@@ -126,40 +125,56 @@ def consum(topic):
                             col("log_content"),
                             col("image"))
         stream_df.foreach(process)
-proc = threading.Thread(target=consum, args=("camera_1",))
-proc1 = threading.Thread(target=consum, args=("camera_2",))
-proc2 = threading.Thread(target=consum, args=("camera_3",))
-proc3 = threading.Thread(target=consum, args=("camera_4",))
-proc4 = threading.Thread(target=consum, args=("camera_5",))
-proc5 = threading.Thread(target=consum, args=("camera_6",))
-proc6 = threading.Thread(target=consum, args=("camera_7",))
-proc7 = threading.Thread(target=consum, args=("camera_8",))
-proc8 = threading.Thread(target=consum, args=("camera_9",))
-proc9 = threading.Thread(target=consum, args=("camera_10",))
-proc.start()
-proc1.start()
-proc2.start()
-proc3.start()
-proc4.start()
-proc5.start()
-proc6.start()
-proc7.start()
-proc8.start()
-proc9.start()
-proc.join()
-proc1.join()
-proc2.join()
-proc3.join()
-proc4.join()
-proc5.join()
-proc6.join()
-proc7.join()
-proc8.join()
-proc9.join()
-# p = mp.Pool(10)
-# p.map(consum, topics)
-# p.start()
-# p.join()
+
+def run(id):
+    thread = threading.Thread(target=consum(id))
+    thread1 = threading.Thread(target=consum(id+1))
+    thread2 = threading.Thread(target=consum(id+2))
+    thread.start()
+    thread1.start()
+    thread2.start()
+    thread.join()
+    thread1.join()
+    thread2.join()
+if __name__ == '__main__':
+    procs = []
+    for i in range(1,13,3):
+        proc = Process(target=run, args=(i,))
+        procs.append(proc)
+        proc.start()
+    for proc in procs:
+        proc.join()
+# proc = threading.Thread(target=consum, args=("camera_1",))
+# proc1 = threading.Thread(target=consum, args=("camera_2",))
+# proc2 = threading.Thread(target=consum, args=("camera_3",))
+# proc3 = threading.Thread(target=consum, args=("camera_4",))
+# proc4 = threading.Thread(target=consum, args=("camera_5",))
+# proc5 = threading.Thread(target=consum, args=("camera_6",))
+# proc6 = threading.Thread(target=consum, args=("camera_7",))
+# proc7 = threading.Thread(target=consum, args=("camera_8",))
+# proc8 = threading.Thread(target=consum, args=("camera_9",))
+# proc9 = threading.Thread(target=consum, args=("camera_10",))
+# proc.start()
+# proc1.start()
+# proc2.start()
+# proc3.start()
+# proc4.start()
+# proc5.start()
+# proc6.start()
+# proc7.start()
+# proc8.start()
+# proc9.start()
+# proc.join()
+# proc1.join()
+# proc2.join()
+# proc3.join()
+# proc4.join()
+# proc5.join()
+# proc6.join()
+# proc7.join()
+# proc8.join()
+# proc9.join()
+
 # df = spark.readStream\
 #         .format("kafka")\
 #         .option("kafka.bootstrap.servers", hosts)\
