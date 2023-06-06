@@ -58,7 +58,7 @@ def tracking(data):
         obj = track.create_record(cam_id, send_time, amount, s, img, tracks, samples)
         mydb = connect(
             host="localhost",
-            user="root",
+            user="hduser",
             password="hduser@123",
             database="object_tracking") 
         cursor = mydb.cursor()
@@ -74,8 +74,8 @@ def tracking(data):
 def process(row):
     mydb = connect(
         host="192.168.56.104",
-        user="admin",
-        password="password",
+        user="hduser",
+        password="hduser@123",
         database="object_tracking") 
     cursor = mydb.cursor()
     sel_query = "SELECT object_amount FROM event_logs where camera_id = %s ORDER BY ID DESC LIMIT 1"
