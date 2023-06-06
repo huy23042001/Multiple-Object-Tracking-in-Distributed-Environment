@@ -126,17 +126,17 @@ def consum(id):
                             col("image"))
         stream_df.foreach(process)
 
-def run(id):
-    thread = threading.Thread(target=consum(id))
-    thread1 = threading.Thread(target=consum(id+1))
-    thread2 = threading.Thread(target=consum(id+2))
-    thread.start()
-    thread1.start()
-    thread2.start()
+# def run(id):
+#     thread = threading.Thread(target=consum(id))
+#     thread1 = threading.Thread(target=consum(id+1))
+#     thread2 = threading.Thread(target=consum(id+2))
+#     thread.start()
+#     thread1.start()
+#     thread2.start()
 if __name__ == '__main__':
     procs = []
-    for i in range(1,13,3):
-        proc = Process(target=run, args=(i,))
+    for i in range(1,13):
+        proc = Process(target=consum, args=(i,))
         procs.append(proc)
         proc.start()
     for proc in procs:
