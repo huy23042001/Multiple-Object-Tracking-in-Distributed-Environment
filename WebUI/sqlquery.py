@@ -2,11 +2,16 @@ from mysql.connector import connect
 
 class MySQLBuilder:
     def __init__(self):
+        # self.mydb = connect(
+        #     host="localhost",
+        #     user="admin",
+        #     password="password",
+        #     database="test") 
         self.mydb = connect(
             host="localhost",
-            user="admin",
-            password="password",
-            database="test") 
+            user="hduser",
+            password="hduser@123",
+            database="object_tracking") 
         
     def execute(self, query_str):
         cursor = self.mydb.cursor()

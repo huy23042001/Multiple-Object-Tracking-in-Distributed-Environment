@@ -5,7 +5,12 @@ from kafka import KafkaProducer
 import time
 import cv2
 import base64
+from sqlquery import MySQLBuilder
+from multiprocessing import Process
+import threading
 producer = KafkaProducer(bootstrap_servers=['192.168.100.124:9092','192.168.100.125:9093'])
+mydb = MySQLBuilder()
+cameras = mydb.execute("select * from cameras")
 
 def encode(cam_id, frame):
     _, buff = cv2.imencode('.jpg', frame)
@@ -35,7 +40,7 @@ def run(id,source):
         _, img = camera.retrieve()
         producer.send(topic, encode(id,img))
         time.sleep(2)
-        print("sending")
+        print("camera " + str(id) + " sending")
 
 # # block until all async messages are sent
 # producer.flush()
@@ -43,8 +48,10 @@ def run(id,source):
 # # configure multiple retries
 # producer = KafkaProducer(retries=5)
 if __name__  == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--camera", action="store", dest="cam", type=int, default="0")
-    parser.add_argument("--source", action="store", dest="source", type=int, default="1.mp4")
-    args = parser.parse_args()
-    run(args.cam, args.source)
+    procs = []
+    for cam in cameras: 
+        proc =  threading.Thread(target=run, args=(cam[0], cam[1]))
+        procs.append(proc)
+        proc.start()
+    # for proc in procs:
+    #     proc.join()
