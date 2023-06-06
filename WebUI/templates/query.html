@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.datatables.net/v/dt/dt-1.13.4/datatables.min.css" rel="stylesheet"/>
+    <style>
+      .list-group-item{
+        border: none;
+        border-bottom: 1px solid rgb(206, 206, 206);
+      }
+      .btn-close{
+        float: right;
+        display: none;
+      }
+      .btn-close:hover{
+        cursor: pointer;
+      }
+      .list-group-item:hover .btn-close{
+        display: block;
+      }
+      .amount-tiny-input{
+        width: 40px;
+      }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Ninth navbar example">
+        <div class="container-xl">
+          <a class="navbar-brand" href="#">Stream Application</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL" aria-controls="navbarsExample07XL" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse" id="navbarsExample07XL">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Trang chủ</a>
+              </li>
+              <!-- <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Cameras</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdown07XL">
+                  {%for i in range(0,len)%}
+                    <li class="dropdown-item" value="{{i}}">Camera {{i}}</a></li>
+                  {%endfor%}
+                </ul>
+              </li> -->
+              <li class="nav-item">
+                <a class="nav-link active aria-current="page" href="/query">Truy vấn</a>
+              </li>
+              
+            </ul>
+            <!-- <form>
+              <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+            </form> -->
+          </div>
+        </div>
+    </nav>  
+    <div class="container">
+        <div class="row card" style="flex-direction: row;">
+            <div class="col-5">
+                <div id="form-query" style="padding: 10px;">
+                    <legend>Query</legend>
+                    <div class="dropdown mb-3">
+                        <select id="list-cameras" class="form-select" aria-label="Default select example">
+                          <option selected value="-1">Chọn camera</option>
+                          {%for i in range(0,len)%}
+                          <option class="camera" value="{{i}}">Camera {{i+1}} - Location {{cameras[i][2]}}</option>
+                          {%endfor%}
+                        </select>
+                    </div>
+                    <div class="mb-3 row"> 
+                      <div class="input-group date col" id="start-datepicker">
+                        <input id="start-date-input" type="text" class="form-control">
+                        <span class="input-group-append">
+                            <span class="input-group-text bg-white" style="border-radius: 0 .25rem .25rem 0;height: 100%;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </span>
+                      </div>
+                      <div class="col">
+                        <div class="cs-form">
+                          <input id="start-time-input" type="time" class="form-control" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 row"> 
+                      <div class="input-group date col" id="end-datepicker">
+                        <input id="end-date-input" type="text" class="form-control">
+                        <span class="input-group-append">
+                            <span class="input-group-text bg-white" style="border-radius: 0 .25rem .25rem 0;height: 100%;">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+                        </span>
+                      </div>
+                      <div class="col">
+                        <div class="cs-form">
+                          <input id="end-time-input" type="time" class="form-control" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="mb-3">
+                        <label for="object" class="form-label">Tên đối tượng</label>
+                        <input type="text" class="form-control" id="object">
+                      </div>
+                      <div class="mb-3">
+                        <label for="amount" class="form-label">Số lượng</label>
+                        <input type="number" value="1" min="1" class="form-control" id="amount" >
+                      </div>
+                      <button id="btn-add" class="btn btn-primary">Thêm</button>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Danh sách đối tượng</label>
+                      <ul id="list-object" class="list-group">
+                        
+                      </ul>
+                    </div>
+                    <button id="submit" class="btn btn-primary">Query</button>
+                  </div>
+            </div>
+            <div class="col-7">
+              <table id="result-query-table" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col-1">#</th>
+                    <th scope="col-1">Camera ID</th>
+                    <th scope="col-3">Location</th>
+                    <th scope="col-7">Event</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(function() {
+            $('#start-datepicker').datepicker();
+            $('#end-datepicker').datepicker();
+        });
+        var listobject = [{"key": "person", "value": 1}]
+        $(document).ready(function(){
+          
+          listobject.forEach(function(obj){
+            $("#list-object").append(`
+              <li class="list-group-item">
+                          <div class="form-check">
+                            <label class="form-check-label" for="form-check-input">
+                              Đối tượng: <span class="object-label">`+
+                              obj["key"]
+                            +`</span></label>
+                            <span> - </span>
+                            <label class="form-check-label amount-label" for="form-check-input">
+                              Số lượng: <input type="number" min="1" class="amount-tiny-input" value="` + obj["value"]
+                            +`" onchange="change(this)"></label>
+                            <button type="button" class="btn-close" aria-label="Close"></button>
+                          </div>
+                        </li>
+              `)
+          })
+          $(".btn-close").click(function(){
+            let object = $(this).parent().find(".object-label").text()
+            var index = listobject.findIndex(function(obj) {
+              return obj.key == object
+            });
+            listobject.splice(index,1)
+            $(this).parent().parent("li").remove()
+          })
+          
+          $("#btn-add").click(function(){
+            let object = $("#object").val()
+            let amount = $("#amount").val()
+            if (object == ""){
+              alert("Tên đối tượng không được bỏ trống")
+              return
+            }
+            let check = true
+            for (let i = 0; i < listobject.length; i++){
+              if (listobject[i]["key"] == object){
+                alert("Đối tượng đã tồn tại")
+                check=false
+                break
+              }
+            }
+            if (check){
+              $("#list-object").append(`
+              <li class="list-group-item">
+                          <div class="form-check">
+                            <label class="form-check-label" for="form-check-input"> 
+                              Đối tượng: <span class="object-label">`+ object
+                            +`</span></label>
+                            <span> - </span>
+                            <label class="form-check-label amount-label" for="form-check-input">
+                              Số lượng: <input type="number" min="1" class="amount-tiny-input" value="` + amount
+                            +`" onchange="change(this)"></label>
+                            <button type="button" class="btn-close" aria-label="Close"></button>
+                          </div>
+                        </li>
+              `)
+            }
+            let obj = {
+              "key": object,
+              "value": amount
+            }
+            listobject.push(obj)
+            console.log(listobject)
+          })
+          $("#submit").click(function(){
+            var start = $("#start-date-input").val()==""?"":$("#start-date-input").val()+($("#start-time-input").val()!=""?" " + $("#start-time-input").val() + ":00": " 00:00:00")
+            var end = $("#end-date-input").val()==""?"":$("#end-date-input").val()+($("#end-time-input").val()!=""?" " + $("#end-time-input").val() + ":00": " 00:00:00")
+            var params = JSON.stringify({
+                  "camera_id": $("#list-cameras").val(),
+                  "start": start,
+                  "end": end,
+                  "objects": listobject
+                })
+                
+            $.ajax({
+              url:"submit", //the page containing python script
+              type: "post", //request type,
+              contentType: 'application/json;charset=UTF-8',
+              data: params,
+              success:function(response){
+                var table = $("#result-query-table")
+                var id = 1
+                for (var i in response){
+                  var row = `<tr>`
+                  for (var j in response[i]){
+                    row += `\n<td>` + response[i][j] + `</td>`
+                  }
+                  row+=`</tr>\n`
+                  table.find("tbody").append(row)
+                  id+=1
+                }
+                $('#result-query-table').DataTable();
+            }});
+            
+          })
+        })
+        var change = function(element){
+            var obj_name = $(element).parent().parent().find(".object-label")[0].innerText
+            console.log(obj_name)
+            for (let i = 0; i < listobject.length; i++){
+              if (listobject[i]["key"] == obj_name){
+                listobject[i]["value"] = $(element).val()
+                break
+              }
+            }
+            console.log(listobject)
+          }
+    </script>
+</body>
+</html>
