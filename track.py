@@ -20,7 +20,6 @@ import torch.backends.cudnn as cudnn
 import sys
 import pandas as pd
 from mysql.connector import connect
-from myobjects import TrackObj
 from deep_sort.sort.track import Track
 from deep_sort.sort.detection import Detection
 
