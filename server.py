@@ -73,7 +73,7 @@ def tracking(data):
 
 def process(row):
     mydb = connect(
-        host="192.168.56.104",
+        host="localhost",
         user="hduser",
         password="hduser@123",
         database="object_tracking") 
