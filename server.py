@@ -102,8 +102,8 @@ def process(row):
 
 
 def consum(id):
-    print("start with camera " + id)
-    consumer = KafkaConsumer("camera_" + id, bootstrap_servers = hosts.split(","), auto_offset_reset="latest", enable_auto_commit = True)
+    print("start with camera " + str(id))
+    consumer = KafkaConsumer("camera_" + str(id), bootstrap_servers = hosts.split(","), auto_offset_reset="latest", enable_auto_commit = True)
     global tracks
     global samples
     for msg in consumer:  
