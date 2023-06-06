@@ -136,11 +136,11 @@ def consum(id):
 if __name__ == '__main__':
     procs = []
     for i in range(1,13):
-        proc = Process(target=consum, args=(i,))
+        proc = threading.Thread(target=consum, args=(i,))
         procs.append(proc)
         proc.start()
-    for proc in procs:
-        proc.join()
+    # for proc in procs:
+    #     proc.join()
 # proc = threading.Thread(target=consum, args=("camera_1",))
 # proc1 = threading.Thread(target=consum, args=("camera_2",))
 # proc2 = threading.Thread(target=consum, args=("camera_3",))
