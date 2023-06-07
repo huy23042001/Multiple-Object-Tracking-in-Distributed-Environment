@@ -31,19 +31,19 @@
         }
         .wrapper_camera{  
             padding: 20px 0 0 0; 
-            width: 1002px;
             
         }
         .wrapper_log{
             padding: 20px 0 0 0; 
-            width: 441px;
         }
         .camera_box{
-            width: 500px;
             height: auto;
             float: left;
             padding: 0 10px 10px 10px;
             position: relative;
+        }
+        .camera_box img{
+          min-height: 200px;
         }
         .btn-close{
             position: absolute;
@@ -115,10 +115,10 @@
     </nav>
     <div class="container">
         <div class="row">
-          <div class="wrapper_camera">
+          <div class="wrapper_camera col-8">
             <h1 class="small_title">Danh sách Camera</h1>
             {%for i in range(0, len)%}
-              <div class="camera_box col">
+              <div class="camera_box col-4">
                   <!-- <div class="card" style="width: 100%; height: auto;min-height: 320px;border: 1px solid grey;"></div> -->
                   <img src="{{ url_for('video_feed', topic=i) }}" class="center card"  style="border:1px solid black;width:100%" alt="Camera stream 1">
                   <p style="margin-top: 5px;" align="center">Camera {{i+1}} - Location {{cameras[i][2]}}</p>
@@ -127,7 +127,7 @@
             {%endfor%}
             
           </div>
-          <div class="wrapper_log">
+          <div class="wrapper_log col-4">
             <h1 class="small_title">Sự kiện</h1>
             <div id="display_list" class="card">
                 
