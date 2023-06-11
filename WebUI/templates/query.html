@@ -70,8 +70,8 @@
                     <div class="dropdown mb-3">
                         <select id="list-cameras" class="form-select" aria-label="Default select example">
                           <option selected value="-1">Chọn camera</option>
-                          {%for i in range(0,len)%}
-                          <option class="camera" value="{{i}}">Camera {{i+1}} - Location {{cameras[i][2]}}</option>
+                          {%for i in range(1,len+1)%}
+                          <option class="camera" value="{{i}}">Camera {{i}} - Location {{cameras[i-1][2]}}</option>
                           {%endfor%}
                         </select>
                     </div>

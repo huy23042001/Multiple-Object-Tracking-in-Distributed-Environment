@@ -1,4 +1,10 @@
 __pycache__
+deepsort/__pycache__
+deepsort/deep/__pycache__
+deepsort/sort/__pycache__
+utils/__pycache__
+utils_ds/__pycache__
+WebUI/__pycache__
 DS.zip
 WebUI/app.log
 WebUI/app.log.offset
